@@ -5,7 +5,8 @@ const domainSchema = new Schema<IDomainDocument>({
   domainName: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true
   },
   zoneId: {
     type: String,
@@ -14,6 +15,10 @@ const domainSchema = new Schema<IDomainDocument>({
   nsServers: {
     type: [String],
     default: []
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
 

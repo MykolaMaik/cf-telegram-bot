@@ -28,10 +28,15 @@ const startCommand = async (ctx: BotContext): Promise<void> => {
     console.error('User data update error:', error);
   }
   
-  const message = '👋 Welcome! I am a bot for managing Cloudflare.\n\n' +
-    '📋 Available commands:\n\n' +
-    '/registerdomain <domain> - Register a new domain\n' +
-    '/help - Show help';
+  let message = '👋 Welcome! I am a bot for managing Cloudflare.\n\n';
+  message += '📋 Available commands:\n\n';
+  message += '/registerdomain <domain> - Register a new domain\n';
+  message += '/listdomains - Show all registered domains\n';
+  message += '/listdns <domain> - Show all DNS records for a domain\n';
+  message += '/createdns - Create a DNS record\n';
+  message += '/updatedns - Update a DNS record\n';
+  message += '/deletedns - Delete a DNS record\n';
+  message += '/help - Show detailed help';
 
   await ctx.reply(message);
 };
