@@ -17,13 +17,25 @@ const registerDomainCommand = async (ctx: BotContext): Promise<void> => {
 
     const domainName = commandParts[1].trim().toLowerCase();
 
+    if (!/^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$/.test(domainName)) {
+      await ctx.reply('Invalid domain name.');
+      return;
+    }
+
+    const existingDomain = await Domain.findOne({ domainName });
+    if (existingDomain) {
+      await ctx.reply(`Domain ${domainName} already registered.`);
+      return;
+    }
+
     await ctx.reply(`Registering domain ${domainName}...`);
 
     const result = await cloudflareService.registerDomain(domainName);
 
     const domain = new Domain({
       domainName: result.domainName,
-      zoneId: result.zoneId
+      zoneId: result.zoneId,
+      nsServers: result.nsServers
     });
     await domain.save();
 

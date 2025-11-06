@@ -10,6 +10,23 @@ const userSchema = new Schema<IUserDocument>({
     type: String,
     required: true,
     unique: true
+  },
+  firstName: {
+    type: String,
+    required: false,
+    default: ''
+  },
+  lastName: {
+    type: String,
+    default: ''
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
 

@@ -10,6 +10,10 @@ const domainSchema = new Schema<IDomainDocument>({
   zoneId: {
     type: String,
     required: true
+  },
+  nsServers: {
+    type: [String],
+    default: []
   }
 });
 
