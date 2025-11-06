@@ -59,7 +59,7 @@ export const listDNSCommand = async (ctx: BotContext): Promise<void> => {
       return;
     }
 
-    let message = `📋 DNS записи для ${domainName}:\n\n`;
+    let message = `📋 DNS records for ${domainName}:\n\n`;
     records.forEach((record, index) => {
       message += `${index + 1}. ${record.name}\n`;
       message += `   Type: ${record.type}\n`;
@@ -81,7 +81,7 @@ export const createDNSCommand = async (ctx: BotContext): Promise<void> => {
     ctx.reply(
       '📝 For creating a DNS record, send a message in the format:\n\n' +
       '/createdns <domain> <type> <name> <value> [TTL] [priority]\n\n' +
-      'Приклади:\n' +
+      'Examples:\n' +
       '/createdns example.com A @ 192.168.1.1\n' +
       '/createdns example.com CNAME www example.com\n' +
       '/createdns example.com MX @ mail.example.com 10\n\n' +

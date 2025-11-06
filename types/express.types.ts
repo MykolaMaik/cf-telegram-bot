@@ -9,13 +9,6 @@ export interface CreateUserRequest extends Request {
   };
 }
 
-export interface UserParamsRequest extends Request {
-  params: {
-    telegramId?: string;
-    identifier?: string;
-  };
-}
-
 export interface APIResponse<T = unknown> {
   success: boolean;
   message?: string;

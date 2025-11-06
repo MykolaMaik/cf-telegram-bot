@@ -24,11 +24,14 @@ const registerDomainCommand = async (ctx: BotContext): Promise<void> => {
 
     const existingDomain = await Domain.findOne({ domainName });
     if (existingDomain) {
-      await ctx.reply(`Domain ${domainName} already registered.`);
+      await ctx.reply(
+        `⚠️ Domain ${domainName} already registered.\n\n` +
+        `NS servers:\n${existingDomain.nsServers.map(ns => `• ${ns}`).join('\n')}`
+      );
       return;
     }
 
-    await ctx.reply(`Registering domain ${domainName}...`);
+    const processingMsg = await ctx.reply(`⏳ Registering domain ${domainName}...`);
 
     const result = await cloudflareService.registerDomain(domainName);
 
@@ -44,19 +47,31 @@ const registerDomainCommand = async (ctx: BotContext): Promise<void> => {
     let responseMessage = `✅ Domain ${domainName} successfully registered!\n\n`;
     responseMessage += `🆔 Zone ID: ${result.zoneId}\n`;
     responseMessage += `📊 Status: ${result.status}\n\n`;
+    responseMessage += `📡 NS servers, which need to be added to the registrar:\n\n`;
     
     if (result.nsServers.length > 0) {
-      responseMessage += `📡 NS servers:\n`;
-      result.nsServers.forEach((ns) => {
-        responseMessage += `• ${ns}\n`;
+      result.nsServers.forEach((ns, index) => {
+        responseMessage += `${index + 1}. ${ns}\n`;
       });
+    } else {
+      responseMessage += '⚠️ NS servers will be available after the zone is activated';
     }
 
-    await ctx.reply(responseMessage);
+    if (processingMsg && 'message_id' in processingMsg) {
+      await ctx.telegram.editMessageText(
+        ctx.chat!.id,
+        processingMsg.message_id,
+        undefined,
+        responseMessage
+      );
+    }
   } catch (error) {
-    console.error('Domain registration error:', error);
+    console.error('Error registering domain:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    await ctx.reply(`Error: ${errorMessage}`);
+    ctx.reply(
+      `❌ Error registering domain: ${errorMessage}\n\n` +
+      'Check the correctness of the domain name and the Cloudflare API settings.'
+    );
   }
 };
 

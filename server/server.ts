@@ -40,8 +40,8 @@ app.get('/', (_req: Request, res: Response) => {
       users: {
         POST: '/api/users',
         GET: '/api/users',
-        GET_BY_ID: '/api/users/:identifier',
-        DELETE: '/api/users/:identifier'
+        GET_BY_ID: '/api/users/:telegramId',
+        DELETE: '/api/users/:telegramId'
       }
     }
   });

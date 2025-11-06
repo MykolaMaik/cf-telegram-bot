@@ -4,12 +4,18 @@ import { IUserDocument, IUserModel } from '../types/user.types';
 const userSchema = new Schema<IUserDocument>({
   telegramId: {
     type: Number,
-    required: false
+    required: false,
+    unique: true,
+    sparse: true,
+    index: true
   },
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true,
+    trim: true,
+    lowercase: true
   },
   firstName: {
     type: String,
