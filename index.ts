@@ -2,8 +2,11 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import connectDB from './models/db';
 import bot from './bot/bot';
+import app from './server/server';
 
 dotenv.config();
+
+const PORT = process.env.PORT || 3001;
 
 const shutdown = async (signal: string): Promise<void> => {
   console.log(`\n${signal} received. Shutting down...`);
@@ -36,10 +39,21 @@ process.on('SIGTERM', () => {
   });
 });
 
+process.on('unhandledRejection', (err: unknown) => {
+  console.error('Unhandled rejection:', err);
+  shutdown('unhandledRejection').catch((error) => {
+    console.error('Error during shutdown:', error);
+    process.exit(1);
+  });
+});
+
 const start = async (): Promise<void> => {
   try {
     await connectDB();
-    console.log('MongoDB connected successfully');
+    
+    app.listen(PORT, () => {
+      console.log(`Express server started on port ${PORT}`);
+    });
 
     bot.launch().then(() => {
       console.log('Bot started');

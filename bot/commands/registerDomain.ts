@@ -32,10 +32,12 @@ const registerDomainCommand = async (ctx: BotContext): Promise<void> => {
 
     const result = await cloudflareService.registerDomain(domainName);
 
+    const userId = ctx.user ? ctx.user._id : null;
     const domain = new Domain({
       domainName: result.domainName,
       zoneId: result.zoneId,
-      nsServers: result.nsServers
+      nsServers: result.nsServers,
+      userId: userId
     });
     await domain.save();
 
